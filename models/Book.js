@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
   description: { type: String },
   price: { type: Number, required: true },
   stock: { type: Number, default: 0 },
-  coverImageUrl: { type: String } // Optional: For displaying book covers
+  coverImageUrl: { type: String, required: true } // Now required
 }, { timestamps: true });
 
 module.exports = mongoose.model('Book', bookSchema);
