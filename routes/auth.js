@@ -3,12 +3,16 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'yoursecretkey';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register user
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
   try {
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
@@ -17,9 +21,11 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully', email: user.email });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Registration Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
 
 // Login user
 router.post('/login', async (req, res) => {
